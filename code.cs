@@ -69,6 +69,12 @@ namespace Win32borrow
                             login.yxrq = dt.Rows[0][29].ToString();
                             login.yyrgnum = Convert.ToInt32(dt.Rows[0][34].ToString());
                             login.fk = Convert.ToSingle(dt.Rows[0][12].ToString());
+                            login.tsk = Convert.ToInt32(dt.Rows[0][6].ToString());
+                            login.tsy = Convert.ToInt32(dt.Rows[0][7].ToString());
+                            login.fsk = Convert.ToInt32(dt.Rows[0][8].ToString());
+                            login.fsy = Convert.ToInt32(dt.Rows[0][9].ToString());
+                            login.qkk = Convert.ToInt32(dt.Rows[0][10].ToString());
+                            login.qky = Convert.ToInt32(dt.Rows[0][11].ToString());
 
                             result = JsonConvert.SerializeObject(login);
                             return result;
@@ -108,8 +114,8 @@ namespace Win32borrow
                 borrow.datatype = dt.Rows[0][10].ToString();
                 borrow.acce01 = dt.Rows[0][2].ToString();
                 borrow.cata12 = dt.Rows[0][4].ToString();
-                borrow.sent01 = dt.Rows[0][3].ToString();
-                borrow.sent02 = dt.Rows[0][3].ToString();
+                borrow.sent01 = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                borrow.sent02 = dt.Rows[0][3].ToString() + " 23:59";
 
 
                 string result = JsonConvert.SerializeObject(borrow);
