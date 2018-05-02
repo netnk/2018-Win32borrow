@@ -39,3 +39,12 @@ public class Borrow
     public string field { get; set; }  
     public string field { get; set; }  
 }
+
+public class Book_hist
+{
+    public string field { get; set; }
+    public string field { get; set; }
+    public string field { get; set; }
+    public string field { get; set; }
+    public string field { get; set; }
+}
