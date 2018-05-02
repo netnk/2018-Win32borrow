@@ -29,22 +29,29 @@ namespace Win32borrow
                         context.Response.Write(wc.admin_login(userid, pwd));
                         break;
                     }
-                case 2:  
+                case 2:  //
                     {
                         //SP_Parameter: @id
-                        string field = context.Request.QueryString["field"];                       
-                        context.Response.Write(wc.reader_login(field));
+                        string readerid = context.Request.QueryString["readerid"];                       
+                        context.Response.Write(wc.reader_login(readerid));
                         break;
                     }
 
-                case 3: 
+                case 3:  //
                     {
-                      
+                        //SP_Parameter: @reader01, @acce01, @sent05, @hist13
                         string field = context.Request.QueryString["field"];
                         string field = context.Request.QueryString["field"];
                         string field = context.Request.QueryString["field"];
                         string field = context.Request.QueryString["field"];
                         context.Response.Write(wc.borrow(field, field, field, field));
+                        break;
+                    }
+                case 5:  //
+                    {
+                        //SP_Parameter: @readerid
+                        string field = context.Request.QueryString["field"];                       
+                        context.Response.Write(wc.hist(field));
                         break;
                     }
             }
