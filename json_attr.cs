@@ -6,21 +6,21 @@ public class Checkadmi
 {
     public string result { get; set; }
     public string msg { get; set; }
-    public string userid { get; set; }
-    public string location { get; set; }
+    public string field { get; set; }
+    public string field { get; set; }
 }
 
 public class Login
 {
     public string result { get; set; }
     public string msg { get; set; }
-    public string field { get; set; }  
-    public string field { get; set; }  
-    public string field { get; set; }  
-    public string field { get; set; }  
-    public int field { get; set; }  
-    public float field { get; set; }  
-    
+    public string field { get; set; }  //
+    public string field { get; set; }  //
+    public string field { get; set; }  //
+    public string yxrq { get; set; }  //
+    public int yyrgnum { get; set; }  //
+    public float fk { get; set; }  //
+
     public int tsk { get; set; }  //
     public int tsy { get; set; }  //
     public int fsk { get; set; }  //
@@ -29,14 +29,29 @@ public class Login
     public int qky { get; set; }  //
 }
 
-public class Borrow
+public class field
 {
     public string result { get; set; }
     public string msg { get; set; }
+    public string field { get; set; }  //
+    public string field { get; set; }  //
+    public string field { get; set; }  //
+    public string field { get; set; }  //
+    public string field { get; set; }  //
+}
+
+public class field
+{
+    public string field { get; set; }
+    public string field { get; set; }
     public string field { get; set; }  
-    public string field { get; set; }  
-    public string field { get; set; }  
-    public string field { get; set; }  
+    public string field { get; set; }  //
+    public string field { get; set; }  //
+    public string field { get; set; }  //
+    public string field { get; set; }  //
+    public string field { get; set; }  //
+    public string field { get; set; }  //
+    public string field { get; set; }  //
     public string field { get; set; }  
 }
 
