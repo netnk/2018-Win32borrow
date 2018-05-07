@@ -43,13 +43,13 @@ namespace Win32borrow
 
         //SP_Name: dbo.wsrv_login
         //SP_Parameter: @id
-        public string reader_login(string field)  //SP_Name:dbo.wsrv_login
+        public string reader_login(string readerid)  //SP_Name:dbo.wsrv_login
         {
             using (SqlConnection con = new SqlConnection(st))
             {
                 con.Open();
                 string result = string.Empty;
-                string sql = string.Format("exec dbo.wsrv_login @id='{0}', @pwd='', @needpwd=0;", field);
+                string sql = string.Format("exec dbo.wsrv_login @id='{0}', @pwd='', @needpwd=0;", readerid);
                 DataTable dt = new DataTable();
                 SqlDataAdapter da = new SqlDataAdapter(sql, con);
                 da.Fill(dt);
@@ -97,13 +97,13 @@ namespace Win32borrow
         }
 
         //SP_Name: dbo.wsrv_borrow
-        //SP_Parameter: @field, @field, @field, @field
-        public string borrow(string field, string field, string field, string userlocation)
+        //SP_Parameter: @reader01, @acce01, @sent05, @hist13
+        public string borrow(string field, string field, string field, string field)
         {
             using (SqlConnection con = new SqlConnection(st))
             {
                 con.Open();
-                string sql = string.Format("exec dbo.wsrv_borrow @field='{0}', @acce01='{1}', @hist15=0, @autosave=1, @clearborrortmp=1, @field='{2}', @field='{3}';", field, field, field, field);
+                string sql = string.Format("exec dbo.wsrv_borrow @field='{0}', @field='{1}', @hist15=0, @autosave=1, @clearborrortmp=1, @field='{2}', @field='{3}';", field, field, field, field);
                 DataTable dt = new DataTable();
                 SqlDataAdapter da = new SqlDataAdapter(sql, con);
                 da.Fill(dt);
@@ -111,7 +111,7 @@ namespace Win32borrow
                 Borrow borrow = new Borrow();
                 borrow.field = dt.Rows[0][0].ToString();
                 borrow.msg = dt.Rows[0][1].ToString();
-                borrow.field = dt.Rows[0][10].ToString();
+                borrow.datatype = dt.Rows[0][10].ToString();
                 borrow.field = dt.Rows[0][2].ToString();
                 borrow.field = dt.Rows[0][4].ToString();
                 borrow.field = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
@@ -124,14 +124,43 @@ namespace Win32borrow
 
         }
 
-        //SP_Name: 
-        //SP_Parameter: @field
-        public string hist(string field)
+        //SP_Name: dbo.wsrv_return
+        //SP_Parameter: @field, @field, @field, @field
+        public string book_return(string field, string field, string field, string field)
         {
             using (SqlConnection con = new SqlConnection(st))
             {
                 con.Open();
-                string sql = string.Format("select top(25) field,field,field,Convert(varchar(10),field,111) as field,Convert(varchar(10),field,111) as field from table  where field = '{0}' order by field desc;", field);
+                string sql = string.Format("exec dbo.wsrv_return @acce01='{0}', @i1=1, @i2=1, @autosave=1,@hist01 = '{1}', @sent06 = '{2}', @hist14='{3}',@returntype = 1, @stoptype=1;", field, field, field, field );
+                DataTable dt = new DataTable();
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                da.Fill(dt);
+
+                Book_return book_return = new Book_return();
+                book_return.result = dt.Rows[0][0].ToString();
+                book_return.msg = dt.Rows[0][1].ToString();
+                book_return.field = dt.Rows[0][13].ToString();
+                book_return.field = dt.Rows[0][2].ToString();
+                book_return.field = dt.Rows[0][8].ToString();
+                book_return.field = dt.Rows[0][3].ToString() + " 23:59";
+                book_return.field = dt.Rows[0][4].ToString();
+                book_return.field = dt.Rows[0][19].ToString();
+                book_return.field = dt.Rows[0][6].ToString();
+
+                string result = JsonConvert.SerializeObject(book_return);
+                return result;
+            }
+            
+        }
+
+        //SP_Name: 
+        //SP_Parameter: @readerid
+        public string book_hist(string readerid)
+        {
+            using (SqlConnection con = new SqlConnection(st))
+            {
+                con.Open();
+                string sql = string.Format("select top(25) ROW_NUMBER() OVER(ORDER BY field desc) 'id' ,field '',field '',cata13 '',Convert(varchar(20),field,120) as '',Convert(varchar(20),field,120) as '',Convert(varchar(20),field,120) as '' from hist where field = '{0}' order by id;", readerid);
                 DataTable dt = new DataTable();
                
                 SqlDataAdapter da = new SqlDataAdapter(sql, con);
