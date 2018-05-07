@@ -24,22 +24,22 @@ namespace Win32borrow
                 case 1:
                     {
                         //SP_Parameter: @id,@pwd
-                        string userid = context.Request.QueryString["userid"];
-                        string pwd = context.Request.QueryString["pwd"];
-                        context.Response.Write(wc.admin_login(userid, pwd));
+                        string field = context.Request.QueryString["field"];
+                        string field = context.Request.QueryString["field"];
+                        context.Response.Write(wc.admin_login(field, field));
                         break;
                     }
                 case 2:  //
                     {
                         //SP_Parameter: @id
-                        string readerid = context.Request.QueryString["readerid"];                       
-                        context.Response.Write(wc.reader_login(readerid));
+                        string field = context.Request.QueryString["field"];                       
+                        context.Response.Write(wc.reader_login(field));
                         break;
                     }
 
                 case 3:  //
                     {
-                        //SP_Parameter: @reader01, @acce01, @sent05, @hist13
+                        //SP_Parameter: @field, @field, @field, @field
                         string field = context.Request.QueryString["field"];
                         string field = context.Request.QueryString["field"];
                         string field = context.Request.QueryString["field"];
@@ -47,11 +47,29 @@ namespace Win32borrow
                         context.Response.Write(wc.borrow(field, field, field, field));
                         break;
                     }
+
+                case 4:  //
+                    {
+                        //SP_Parameter: @field, @field, @field, @field
+                        string field = context.Request.QueryString["field"];
+                        string field = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                        string field = context.Request.QueryString["field"];
+                        string field = context.Request.QueryString["field"];
+                        context.Response.Write(wc.book_return(field, field, field, field));
+                        break;
+                    }
+
                 case 5:  //
                     {
-                        //SP_Parameter: @readerid
+                        //SP_Parameter: @field
                         string field = context.Request.QueryString["field"];                       
-                        context.Response.Write(wc.hist(field));
+                        context.Response.Write(wc.book_hist(field));
+                        break;
+                    }
+
+                default:
+                    {
+                        context.Response.Write("");
                         break;
                     }
             }
