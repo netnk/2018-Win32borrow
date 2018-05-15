@@ -21,19 +21,20 @@ namespace Win32borrow
 
             switch(mode)
             {
-                case 1:
+                case 1:  //
                     {
                         //SP_Parameter: @id,@pwd
-                        string field = context.Request.QueryString["field"];
-                        string field = context.Request.QueryString["field"];
-                        context.Response.Write(wc.admin_login(field, field));
+                        string userid = context.Request.QueryString["userid"];
+                        string pwd = context.Request.QueryString["pwd"];                      
+                        context.Response.Write(wc.AdminLogin(userid, pwd));
+                        
                         break;
                     }
                 case 2:  //
                     {
                         //SP_Parameter: @id
                         string field = context.Request.QueryString["field"];                       
-                        context.Response.Write(wc.reader_login(field));
+                        context.Response.Write(wc.ReaderLogin(field));
                         break;
                     }
 
@@ -43,8 +44,10 @@ namespace Win32borrow
                         string field = context.Request.QueryString["field"];
                         string field = context.Request.QueryString["field"];
                         string field = context.Request.QueryString["field"];
+                        field = HttpUtility.UrlDecode(field);
                         string field = context.Request.QueryString["field"];
-                        context.Response.Write(wc.borrow(field, field, field, field));
+                        field = HttpUtility.UrlDecode(field);
+                        context.Response.Write(wc.Borrow(field, field, field, field));
                         break;
                     }
 
@@ -55,15 +58,32 @@ namespace Win32borrow
                         string field = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
                         string field = context.Request.QueryString["field"];
                         string field = context.Request.QueryString["field"];
-                        context.Response.Write(wc.book_return(field, field, field, field));
+                        field = HttpUtility.UrlDecode(field);
+                        context.Response.Write(wc.BookReturn(field, field, field, field));
                         break;
                     }
 
                 case 5:  //
                     {
-                        //SP_Parameter: @field
+                        //SP_Parameter: @readerid
                         string field = context.Request.QueryString["field"];                       
-                        context.Response.Write(wc.book_hist(field));
+                        context.Response.Write(wc.BookHist(field));
+                        break;
+                    }
+
+                case 6:  //
+                    {
+                        string field = context.Request.QueryString["field"];
+                        wc.DeleteLoginTxt(field);
+                        context.Response.Write("OK!!");
+                        break;
+                    }
+
+                case 99:  //測試用
+                    {
+                        string field = context.Request.QueryString["id"];
+                        int a = wc.ReadLoginTxt(field);
+                        context.Response.Write(a);
                         break;
                     }
 
