@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Web;
+using System.IO;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -17,39 +18,63 @@ namespace Win32borrow
 
         //SP_Name: dbo.wsrv_checkadmi
         //SP_Parameter: @id,@pwd
-        public string admin_login(string userid, string pwd)  //SP_Name:dbo.wsrv_checkadmi
+        public string AdminLogin(string field, string field)  //SP_Name:dbo.wsrv_checkadmi
         {
-            using (SqlConnection con = new SqlConnection(st))
+            int UserLogin = ReadLoginTxt(field);  //
+            switch (UserLogin)
             {
-                con.Open();
-                string sql = string.Format("exec dbo.wsrv_checkadmi @id='{0}', @pwd='{1}';", userid, pwd);
-                DataTable dt = new DataTable();
-                SqlDataAdapter da = new SqlDataAdapter(sql, con);
-                da.Fill(dt);
+                case 0:
+                    {     
+                        using (SqlConnection con = new SqlConnection(st))
+                        {
+                            con.Open();
+                            string sql = string.Format("exec dbo.wsrv_checkadmi @id='{0}', @pwd='{1}';", field, field);
+                            DataTable dt = new DataTable();
+                            SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                            da.Fill(dt);
 
-                Checkadmi checkadmi = new Checkadmi();
-                checkadmi.result = dt.Rows[0][0].ToString();
-                checkadmi.msg = dt.Rows[0][1].ToString();
-                checkadmi.userid = dt.Rows[0][2].ToString();
-                checkadmi.location = dt.Rows[0][3].ToString();
+                            Checkadmi checkadmi = new Checkadmi();
+                            checkadmi.result = dt.Rows[0][0].ToString();
+                            if (dt.Rows[0][0].ToString() == "0")  
+                            {
+                                WriteLoginTxt(field);
+                            }
+                            checkadmi.msg = dt.Rows[0][1].ToString();
+                            checkadmi.field = dt.Rows[0][2].ToString();
+                            checkadmi.field = dt.Rows[0][3].ToString();
 
-                string result = JsonConvert.SerializeObject(checkadmi);
-
-                return result;
+                            string result = JsonConvert.SerializeObject(checkadmi);
+                            return result;
+                           
+                        }
+                       
+                    }
+                default :
+                    {
+                        Checkadmi checkadmi = new Checkadmi();
+                        checkadmi.result = "9";
+                        checkadmi.msg = "ERROR";
+                        checkadmi.field = field;
+                        checkadmi.field = "";
+                        string result = JsonConvert.SerializeObject(checkadmi);
+                        return result;
+                    }
             }
+
+           
 
 
         }
 
         //SP_Name: dbo.wsrv_login
         //SP_Parameter: @id
-        public string reader_login(string readerid)  //SP_Name:dbo.wsrv_login
+        public string ReaderLogin(string field)  //SP_Name:dbo.wsrv_login
         {
             using (SqlConnection con = new SqlConnection(st))
             {
                 con.Open();
                 string result = string.Empty;
-                string sql = string.Format("exec dbo.wsrv_login @id='{0}', @pwd='', @needpwd=0;", readerid);
+                string sql = string.Format("exec dbo.wsrv_login @id='{0}', @pwd='', @needpwd=0;", field);
                 DataTable dt = new DataTable();
                 SqlDataAdapter da = new SqlDataAdapter(sql, con);
                 da.Fill(dt);
@@ -81,8 +106,8 @@ namespace Win32borrow
                         }
                     default:
                         {
-                            Login login = new Login();
-                            login.result = dt.Rows[0][0].ToString();
+                            Login field = new Login();
+                            login.field = dt.Rows[0][0].ToString();
                             login.msg = dt.Rows[0][1].ToString();
                             result = JsonConvert.SerializeObject(login);
                             return result;
@@ -97,21 +122,21 @@ namespace Win32borrow
         }
 
         //SP_Name: dbo.wsrv_borrow
-        //SP_Parameter: @reader01, @acce01, @sent05, @hist13
-        public string borrow(string field, string field, string field, string field)
+        //SP_Parameter: @field, @field, @field, @field
+        public string Borrow(string field, string field, string field, string field)
         {
             using (SqlConnection con = new SqlConnection(st))
             {
                 con.Open();
-                string sql = string.Format("exec dbo.wsrv_borrow @field='{0}', @field='{1}', @hist15=0, @autosave=1, @clearborrortmp=1, @field='{2}', @field='{3}';", field, field, field, field);
+                string sql = string.Format("exec dbo.wsrv_borrow @reader01='{0}', @field='{1}', @field=0, @autosave=1, @clearborrortmp=1, @sent05='{2}', @hist13='{3}';", field, field, field, field);
                 DataTable dt = new DataTable();
                 SqlDataAdapter da = new SqlDataAdapter(sql, con);
                 da.Fill(dt);
 
                 Borrow borrow = new Borrow();
-                borrow.field = dt.Rows[0][0].ToString();
+                borrow.result = dt.Rows[0][0].ToString();
                 borrow.msg = dt.Rows[0][1].ToString();
-                borrow.datatype = dt.Rows[0][10].ToString();
+                borrow.field = dt.Rows[0][10].ToString();
                 borrow.field = dt.Rows[0][2].ToString();
                 borrow.field = dt.Rows[0][4].ToString();
                 borrow.field = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
@@ -126,17 +151,17 @@ namespace Win32borrow
 
         //SP_Name: dbo.wsrv_return
         //SP_Parameter: @field, @field, @field, @field
-        public string book_return(string field, string field, string field, string field)
+        public string BookReturn(string field, string returntime, string field, string field)
         {
             using (SqlConnection con = new SqlConnection(st))
             {
                 con.Open();
-                string sql = string.Format("exec dbo.wsrv_return @acce01='{0}', @i1=1, @i2=1, @autosave=1,@hist01 = '{1}', @sent06 = '{2}', @hist14='{3}',@returntype = 1, @stoptype=1;", field, field, field, field );
+                string sql = string.Format("exec dbo.wsrv_return @acce01='{0}', @i1=1, @i2=1, @autosave=1,@hist01 = '{1}', @sent06 = '{2}', @hist14='{3}',@returntype = 1, @stoptype=1;", barcode, returntime, userid, userlocation );
                 DataTable dt = new DataTable();
                 SqlDataAdapter da = new SqlDataAdapter(sql, con);
                 da.Fill(dt);
 
-                Book_return book_return = new Book_return();
+                Bookreturn book_return = new Bookreturn();
                 book_return.result = dt.Rows[0][0].ToString();
                 book_return.msg = dt.Rows[0][1].ToString();
                 book_return.field = dt.Rows[0][13].ToString();
@@ -154,13 +179,13 @@ namespace Win32borrow
         }
 
         //SP_Name: 
-        //SP_Parameter: @readerid
-        public string book_hist(string readerid)
+        //SP_Parameter: @field
+        public string BookHist(string readerid)
         {
             using (SqlConnection con = new SqlConnection(st))
             {
                 con.Open();
-                string sql = string.Format("select top(25) ROW_NUMBER() OVER(ORDER BY field desc) 'id' ,field '',field '',cata13 '',Convert(varchar(20),field,120) as '',Convert(varchar(20),field,120) as '',Convert(varchar(20),field,120) as '' from hist where field = '{0}' order by id;", readerid);
+                string sql = string.Format("select top(25)  ROW_NUMBER() OVER(ORDER BY sent01 desc) as ' '  ,acce01 '登錄號',hcata12 '題名',cata13 '附件',Convert(varchar(20),sent01,120) as '借出日期',Convert(varchar(20),sent02,120) as '應還日期',Convert(varchar(20),hist01,120) as '歸還日期' from hist where hreader01 = '{0}';", readerid);
                 DataTable dt = new DataTable();
                
                 SqlDataAdapter da = new SqlDataAdapter(sql, con);
@@ -168,6 +193,55 @@ namespace Win32borrow
 
                 string result = JsonConvert.SerializeObject(dt);
                 return result;
+            }
+        }
+
+        public string WriteLoginTxt(string str)  //
+        {
+            string path = HttpContext.Current.Server.MapPath("./");
+            using (FileStream fs = new FileStream(path + "log.txt", FileMode.Append))
+            {
+                using (StreamWriter writer = new StreamWriter(fs))
+                {
+                    writer.WriteLine(str);
+                    return string.Empty;
+                }
+            }
+        }
+
+        public int ReadLoginTxt(string field)  //
+        {
+            string path = HttpContext.Current.Server.MapPath("./");
+            using (FileStream fs = new FileStream(path + "log.txt", FileMode.Open))
+            {
+                using (StreamReader sr = new StreamReader(fs))
+                {
+                    string result = sr.ReadToEnd();
+                    if(result.IndexOf(field) > -1)
+                    {
+                        return 1;
+                    }
+                    return 0;
+                }
+            }
+        }
+
+        public void DeleteLoginTxt(string userid)  //
+        {
+            string path = HttpContext.Current.Server.MapPath("./");
+            using (FileStream fs = new FileStream(path + "log.txt", FileMode.Open))
+            {
+                using (StreamReader sr = new StreamReader(fs))
+                {
+                    string result = sr.ReadToEnd();
+                    if (result.IndexOf(field) > -1)
+                    {
+                        sr.Dispose();
+                        sr.Close();
+                        File.WriteAllText(path + "log.txt", result.Replace(userid+"\r\n", ""));
+                    }                   
+                }
+               
             }
         }
 
